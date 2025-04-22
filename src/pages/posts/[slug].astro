@@ -1,0 +1,43 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getPost } from '../../lib/getPost.ts';
+const { slug } = Astro.params; // Truy cập tham số slug từ URL
+import MarkdownIt from 'markdown-it';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const post = getPost(slug || 'default-slug');
+
+if (!post) {
+  throw new Error(`Không tìm thấy bài viết với slug "${slug}"`);
+}
+
+const { frontmatter, content } = post;
+
+const md = new MarkdownIt();
+const htmlContent = md.render(content);
+
+
+export async function getStaticPaths() {
+  const postDir = path.resolve('./src/content/posts');
+  const files =fs.readdirSync(postDir).filter(file => file.endsWith('.md'));
+
+  return files.map((file)  => ({
+    params: {slug: file.replace('.md','')},
+  }));
+}
+---
+
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{frontmatter.title}</title>
+  </head>
+  <body>
+    <main style="max-width: 700px; margin: auto; padding: 2rem;">
+      <h1>{frontmatter.title}</h1>
+      <p><em>{frontmatter.pubDate}</em></p>
+      <div set:html={htmlContent} />
+    </main>
+  </body>
+</html>

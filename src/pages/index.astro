@@ -1,11 +1,42 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import fs from 'fs';
+import path from 'path';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Sửa lại đường dẫn, không dùng 'public'
+const postDirectory = path.join(process.cwd(), 'src/content/posts');  // Dùng src/content/posts thay vì public
+const postFiles = fs.readdirSync(postDirectory).filter(file => file.endsWith('.md')); //lọc  file .md
+
+const posts = postFiles.map(file => {
+  const filePath = path.join(postDirectory, file);
+  const postContent = fs.readFileSync(filePath, 'utf-8');
+
+  // Lấy frontmatter bằng cách cắt đầu file
+  const frontmatter = postContent.split('\n').slice(0, 5).join('\n');  // Chỉ lấy 5 dòng đầu tiên cho frontmatter
+
+  // Kiểm tra xem có 'title' không trong frontmatter
+  const titleMatch = frontmatter.match(/title: "(.*)"/);
+  const title = titleMatch ? titleMatch[1] : 'Không có tiêu đề';  // Nếu không tìm thấy title thì trả về giá trị mặc định
+
+  const slug = file.replace('.md', '');
+
+  return { title, slug };
+});
+
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trang chủ Blog</title>
+  </head>
+  <body>
+    <main>
+      <h1>Chào mừng đến với Blog của tôi!</h1>
+      <ul>
+        {posts.map(post => (
+          <li><a href={`/posts/${post.slug}`}>{post.title}</a></li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>
