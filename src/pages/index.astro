@@ -27,16 +27,49 @@ const posts = postFiles.map(file => {
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>Trang chủ Blog</title>
+    <title>Interstellar ice</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1; /* phần nội dung sẽ chiếm toàn bộ chiều cao còn lại */
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f0f0f0;
+        color: #555;
+      }
+
+      ul {
+        text-align: center;
+      }
+    </style>
   </head>
+
   <body>
     <main>
-      <h1>Chào mừng đến với Blog của tôi!</h1>
-      <ul>
+      <h1 style="text-align: center;">Chân Không</h1>
+      <ul style="list-style-type: none;">
         {posts.map(post => (
-          <li><a href={`/posts/${post.slug}`}>{post.title}</a></li>
+          <li style="margin: 15px 15px; text-align: center;">
+            <a href={`/posts/${post.slug}`}>{post.title}</a>
+          </li>
         ))}
       </ul>
     </main>
+
+    <footer>
+      © 2025 knnav – All rights reserved.
+    </footer>
   </body>
 </html>
