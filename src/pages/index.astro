@@ -1,26 +1,43 @@
 ---
 import fs from 'fs';
 import path from 'path';
+import matter from 'gray-matter'
 
 // Sửa lại đường dẫn, không dùng 'public'
 const postDirectory = path.join(process.cwd(), 'src/content/posts');  // Dùng src/content/posts thay vì public
 const postFiles = fs.readdirSync(postDirectory).filter(file => file.endsWith('.md')); //lọc  file .md
 
-const posts = postFiles.map(file => {
+const posts = postFiles
+
+.map(file => {
   const filePath = path.join(postDirectory, file);
   const postContent = fs.readFileSync(filePath, 'utf-8');
 
-  // Lấy frontmatter bằng cách cắt đầu file
-  const frontmatter = postContent.split('\n').slice(0, 5).join('\n');  // Chỉ lấy 5 dòng đầu tiên cho frontmatter
+  // // Lấy frontmatter bằng cách cắt đầu file
+  // const frontmatter = postContent.split('\n').slice(0, 5).join('\n');  // Chỉ lấy 5 dòng đầu tiên cho frontmatter
 
-  // Kiểm tra xem có 'title' không trong frontmatter
-  const titleMatch = frontmatter.match(/title: "(.*)"/);
-  const title = titleMatch ? titleMatch[1] : 'Không có tiêu đề';  // Nếu không tìm thấy title thì trả về giá trị mặc định
+  // // Kiểm tra xem có 'title' không trong frontmatter
+  // const titleMatch = frontmatter.match(/title: "(.*)"/);
+  // const title = titleMatch ? titleMatch[1] : 'Không có tiêu đề';  // Nếu không tìm thấy title thì trả về giá trị mặc định
 
-  const slug = file.replace('.md', '');
+  // const slug = file.replace('.md', '');
 
-  return { title, slug };
-});
+  // return { title, slug };
+  const { data } = matter(postContent); // Parse frontmatter
+
+    return {
+      title: data.title || 'No name',
+      pubDate: data.pubDate || '', // Ngày mặc định nếu thiếu
+      slug: file.replace('.md', ''),
+    };
+  })
+.sort((a, b) => {
+    const dateA = new Date(a.pubDate);
+    const dateB = new Date(b.pubDate);
+    if (dateA > dateB) return -1;
+    if (dateA < dateB) return 1;
+    return a.title.localeCompare(b.title);
+  });
 
 ---
 
@@ -37,6 +54,7 @@ const posts = postFiles.map(file => {
       body {
         display: flex;
         flex-direction: column;
+        font-family: Arial, Helvetica, sans-serif;
       }
 
       main {
@@ -61,7 +79,7 @@ const posts = postFiles.map(file => {
       <h1 style="text-align: center;">Chân Không</h1>
       <ul style="list-style-type: none;">
         {posts.map(post => (
-          <li style="margin: 15px 15px; text-align: center;">
+          <li style="margin: 15px 15px; text-align: right;">
             <a href={`/posts/${post.slug}`}>{post.title}</a>
           </li>
         ))}
