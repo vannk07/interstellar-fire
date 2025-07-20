@@ -75,7 +75,7 @@ const $$slug = createComponent(($$result, $$props, $$slots) => {
 }, "/Users/m1/interstellar-ice/src/pages/posts/[slug].astro", void 0);
 
 const $$file = "/Users/m1/interstellar-ice/src/pages/posts/[slug].astro";
-const $$url = "/<interstellar-fire>/posts/[slug]";
+const $$url = "/interstellar-fire/posts/[slug]";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,

@@ -33,7 +33,7 @@ const $$Index = createComponent(($$result, $$props, $$slots) => {
 }, "/Users/m1/interstellar-ice/src/pages/index.astro", void 0);
 
 const $$file = "/Users/m1/interstellar-ice/src/pages/index.astro";
-const $$url = "/<interstellar-fire>";
+const $$url = "/interstellar-fire";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
